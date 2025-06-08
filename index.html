@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PARIMAS BANK = >SecureFinance - Financial Services</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    body {
+      background-color: #fff;
+      color: #222;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      background-color: #007a33;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #d6f0d6;
+      text-decoration: none;
+      user-select: none;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    nav ul li a {
+      color: #d6f0d6;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: color 0.3s ease;
+    }
+
+    nav ul li a:hover,
+    nav ul li a:focus {
+      color: #a3d9a5;
+      outline: none;
+    }
+
+    .hero {
+      position: relative;
+      background: url('https://images.unsplash.com/photo-1526378728647-58a6721b5b9e?auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+      height: 450px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 122, 51, 0.6);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 800px;
+      padding: 0 1rem;
+    }
+
+    .hero-content h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    }
+
+    .hero-content p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    }
+
+    .btn-primary {
+      background-color: #a3d9a5;
+      color: #007a33;
+      font-weight: 700;
+      padding: 0.75rem 2.5rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 8px rgba(163,217,165,0.5);
+      transition: background-color 0.3s ease;
+      display: inline-block;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: #7cb87c;
+      color: white;
+      outline: none;
+      box-shadow: 0 6px 12px rgba(124,184,124,0.7);
+    }
+
+    main {
+      padding: 3rem 0;
+    }
+
+    .services-section {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .services-section h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 2.25rem;
+      color: #007a33;
+      margin-bottom: 0.5rem;
+    }
+
+    .services-section p {
+      font-size: 1.1rem;
+      color: #444;
+      margin-bottom: 2rem;
+      max-width: 750px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cards {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: #f6f8f7;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.07);
+      border-radius: 8px;
+      padding: 2rem 1.5rem;
+      width: 320px;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      font-family: 'Montserrat', sans-serif;
+      color: #007a33;
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .card p {
+      font-size: 1rem;
+      color: #555;
+    }
+
+    .gallery-section {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .gallery-section h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 2.25rem;
+      color: #007a33;
+      margin-bottom: 2rem;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .gallery-grid img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .gallery-grid img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    footer {
+      background-color: #004d1a;
+      color: #d6f0d6;
+      padding: 2rem 0 1rem;
+    }
+
+    .footer-container {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .footer-info h3,
+    .footer-social h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      font-size: 1.25rem;
+    }
+
+    .footer-info p {
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      color: #c4e1c1;
+    }
+
+    .social-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .social-links a {
+      color: #d6f0d6;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .social-links a:hover,
+    .social-links a:focus {
+      color: #a3d9a5;
+      outline: none;
+    }
+
+    .copyright {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      color: #b0d5a4;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        gap: 1rem;
+      }
+      .cards {
+        flex-direction: column;
+        align-items: center;
+      }
+      .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <a href="#" class="logo" aria-label="SecureFinance Home">
+        <svg viewBox="0 0 64 64" width="48" height="48" fill="#007a33" aria-hidden="true" focusable="false">
+          <polygon points="32 4 60 20 32 36 4 20" />
+          <polygon points="32 36 60 52 32 60 4 52" />
+        </svg>
+        <span> BNP PARIMAS BANK = > SecureFinance</span>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#transactions">Transactions</a></li>
+          <li><a href="#safekeeping">Safe Keeping</a></li>
+          <li><a href="#trading">Trading</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" role="banner">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <h1>BNP PARIBAS BANK Secure Financial Transactions and Trading</h1>
+      <p>Your trusted partner for safe, seamless asset management and global trading solutions.</p>
+      <a href="#contact" class="btn-primary">Get Started</a>
+    </div>
+  </section>
+
+  <main class="container main-content">
+    <section id="transactions" class="services-section" tabindex="-1">
+      <h2>Financial Transactions</h2>
+      <p>Secure, fast, and compliant transaction services for your business needs.</p>
+      <div class="cards">
+        <div class="card">
+          <h3>Domestic Payments</h3>
+          <p>Reliable and fast transfers with full tracking and support.</p>
+        </div>
+        <div class="card">
+          <h3>International Transfers</h3>
+          <p>Efficient cross-border payment solutions at competitive rates.</p>
+        </div>
+        <div class="card">
+          <h3>Payment Solutions</h3>
+          <p>Custom gateways and APIs tailored to your business.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="safekeeping" class="services-section" tabindex="-1">
+      <h2>Safe Keeping</h2>
+      <p>Top-tier custody and asset protection services you can trust.</p>
+      <div class="cards">
+        <div class="card">
+          <h3>Asset Custody</h3>
+          <p>Comprehensive safekeeping with insurance coverage.</p>
+        </div>
+        <div class="card">
+          <h3>Digital Vaults</h3>
+          <p>Secure digital storage for documents and valuables.</p>
+        </div>
+        <div class="card">
+          <h3>Risk Management</h3>
+          <p>Continuous monitoring and fraud prevention.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="trading" class="services-section" tabindex="-1">
+      <h2>Trading Services</h2>
+      <p>Cutting-edge trading platforms for global markets.</p>
+      <div class="cards">
+        <div class="card">
+          <h3>Equities Trading</h3>
+          <p>Real-time access to global stock exchanges.</p>
+        </div>
+        <div class="card">
+          <h3>Fixed Income</h3>
+          <p>Trade bonds and debt instruments with ease.</p>
+        </div>
+        <div class="card">
+          <h3>Derivatives</h3>
+          <p>Advanced risk management through derivatives.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery" class="gallery-section" tabindex="-1">
+      <h2>Our Highlights</h2>
+      <div class="gallery-grid" aria-label="Gallery of financial images">
+        <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80" alt="Financial graph on screen" />
+        <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80" alt="Financial graph on screen" />
+        <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80" alt="Business people discussing charts" />
+        <img src="https://images.unsplash.com/photo-1556742400-b5c018ff4a07?auto=format&fit=crop&w=800&q=80" alt="Modern office building" />
+        <img src="https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&w=800&q=80" alt="Hands shaking business deal" />
+        <img src="https://images.unsplash.com/photo-1526378728647-58a6721b5b9e?auto=format&fit=crop&w=800&q=80" alt="City skyline at sunset" />
+        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80" alt="Stock market display with numbers" />
+      </div>
+    </section>
+
+    <section id="contact" class="services-section" tabindex="-1">
+      <h2>Contact Us</h2>
+      <p>Reach out to discuss your financial goals and find out how we can help.</p>
+      <form style="max-width:400px; margin: 1rem auto; display:flex; flex-direction:column; gap:1rem;">
+        <input type="text" placeholder="Your Name" required style="padding:0.75rem; font-size:1rem; border:1px solid #ccc; border-radius:4px;" />
+        <input type="email" placeholder="Your Email" required style="padding:0.75rem; font-size:1rem; border:1px solid #ccc; border-radius:4px;" />
+        <textarea placeholder="Your Message" rows="4" required style="padding:0.75rem; font-size:1rem; border:1px solid #ccc; border-radius:4px;"></textarea>
+        <button type="submit" class="btn-primary" style="width:100%; padding:0.75rem;">Send Message</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-info">
+        <h3>SecureFinance</h3>
+        <p>123 Finance Street</p>
+        <p>New York, NY 10001</p>
+        <p>Email: info@securefinance.com</p>
+        <p>Phone: +1 (555) 0000000</p>
+      </div>
+      <div class="footer-social">
+        <h3>Follow Us</h3>
+        <ul class="social-links" aria-label="Social media links">
+          <li><a href="#" aria-label="Facebook">&#x1F426;</a></li>
+          <li><a href="#" aria-label="Twitter">&#x1F426;</a></li>
+          <li><a href="#" aria-label="LinkedIn">&#x1F426;</a></li>
+          <li><a href="#" aria-label="Instagram">&#x1F426;</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">
+      &copy; 2025 BNP PARIBAS SecureFinance. All rights reserved.
+    </div>
+  </footer>
+  <!-- Floating Support Button -->
+<a href="mailto:support@securefinance.com" 
+   aria-label="Contact Support"
+   style="
+     position: fixed;
+     bottom: 20px;
+     right: 20px;
+     background-color: #007a33;
+     color: white;
+     width: 80px;
+     height: 60px;
+     border-radius: 50%;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+     text-decoration: none;
+     font-size: 28px;
+     cursor: pointer;
+     transition: box-shadow 0.3s ease;
+     z-index: 1000;
+   "
+   onmouseover="this.style.boxShadow='0 6px 12px rgba(0,0,0,0.3)';"
+   onmouseout="this.style.boxShadow='0 4px 8px rgba(0,0,0,0.2)';"
+>
+  &#128172; <!-- Speech Balloon emoji for support/chat -->
+</a>
+</body>
+            </html>
