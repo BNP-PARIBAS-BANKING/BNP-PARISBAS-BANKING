@@ -321,6 +321,33 @@
     }
   }
   </style>
+<style>
+  .styled-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #0d6efd; /* Bootstrap primary */
+    color: white;
+    font-weight: 600;
+    font-family: 'Segoe UI', sans-serif;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+  }
+
+  .styled-button:hover {
+    background-color: #084298;
+    color: #fff;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(13, 110, 253, 0.5);
+  }
+
+  .styled-button:active {
+    transform: scale(0.97);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  }
+</style>
 </head>
 <body>
   <header>
@@ -358,7 +385,8 @@
   BNP PARIBAS BANK Secure Financial Transactions and Trading
       </h1>
       <p>Your trusted partner for safe, seamless asset management and global trading solutions.</p>
-      <a href="#contact" class="btn-primary">Get Started</a>
+        <a href="#contact" class="btn-primary styled-button">Get Started</a>
+      
     </div>
   </section>
 
