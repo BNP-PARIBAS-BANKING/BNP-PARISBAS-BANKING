@@ -1,88 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>BNP Paribas Login</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(to right, #007a5e, #00a86b);
       display: flex;
-      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       min-height: 100vh;
-      color: #fff;
-    }
-
-    .container {
-      width: 90%;
-      max-width: 400px;
-      margin: 40px auto;
-    }
-
-    header, footer {
-      background-color: #fff;
       color: #333;
+    }
+
+    .login-wrapper {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      padding: 40px 30px;
       width: 100%;
       max-width: 400px;
-      margin: 0 auto;
-      padding: 10px 20px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    header img {
-      height: 40px;
-      margin-right: 10px;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .nav-links a {
-      color: #007a5e;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-    }
-
-    .nav-links .material-icons {
-      margin-right: 5px;
-    }
-
-    .form-container {
-      background: #fff;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-      color: #333;
-      margin: 40px auto;
+      text-align: center;
       animation: fadeIn 1s ease;
     }
 
-    h2 {
-      text-align: center;
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 4px solid #007a5e;
+      object-fit: cover;
+      object-position: center;
       margin-bottom: 20px;
+      background-color: #eee;
+    }
+
+    h2 {
       color: #007a5e;
+      margin-bottom: 30px;
     }
 
     label {
+      text-align: left;
+      display: block;
       font-weight: bold;
       margin-top: 15px;
-      display: block;
     }
 
     input {
@@ -91,14 +61,13 @@
       margin-top: 5px;
       border: 1px solid #ccc;
       border-radius: 10px;
-      box-sizing: border-box;
       font-size: 14px;
     }
 
     button {
       width: 100%;
       padding: 12px;
-      margin-top: 20px;
+      margin-top: 25px;
       background-color: #007a5e;
       color: white;
       border: none;
@@ -123,7 +92,6 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      animation: fadeIn 0.3s ease-in-out;
     }
 
     .loader .spinner {
@@ -132,13 +100,13 @@
       border: 8px solid #fff;
       border-top-color: #00a86b;
       border-radius: 50%;
-      animation: spin 1s linear infinite, zoomPulse 1s ease-in-out infinite;
+      animation: spin 1s linear infinite;
       margin-bottom: 20px;
     }
 
     .loader img {
-      width: 120px;
-      margin-bottom: 15px;
+      width: 100px;
+      margin-bottom: 20px;
       animation: zoomPulse 1.5s ease-in-out infinite;
     }
 
@@ -146,47 +114,6 @@
       color: white;
       font-weight: bold;
       font-size: 16px;
-      text-align: center;
-    }
-
-    footer {
-      background-color: #004733;
-      color: #fff;
-      text-align: center;
-      padding: 20px 10px;
-      margin-top: auto;
-    }
-
-    footer a {
-      color: #fff;
-      text-decoration: none;
-      margin: 0 10px;
-    }
-
-    .support-btn {
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      background-color: #007a5e;
-      color: #fff;
-      padding: 14px 18px;
-      border-radius: 50px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      text-decoration: none;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      z-index: 10000;
-      transition: transform 0.3s ease;
-    }
-
-    .support-btn:hover {
-      background-color: #009c72;
-      transform: scale(1.05);
-    }
-
-    .support-btn .material-icons {
-      margin-right: 8px;
     }
 
     @keyframes spin {
@@ -195,9 +122,8 @@
     }
 
     @keyframes zoomPulse {
-      0% { transform: scale(1); }
+      0%, 100% { transform: scale(1); }
       50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
     }
 
     @keyframes fadeIn {
@@ -205,97 +131,64 @@
       to { opacity: 1; }
     }
 
-    @media (max-width: 600px) {
-      .nav-links {
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 10px;
-      }
-
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .support-btn {
-        top: unset;
-        bottom: 20px;
+    @media (max-width: 500px) {
+      .login-wrapper {
+        padding: 30px 20px;
+        width: 90%;
       }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div style="display: flex; align-items: center;">
-      <img src="https://bnp-paribas-banking.github.io/BNP-ASSETS/Logo.jpg" alt="BNP Paribas Logo">
-      <span style="color: #007a5e; font-weight: bold; font-size: 20px;">BNP Paribas</span>
-    </div>
-    <div class="nav-links">
-      <a href="#"><span class="material-icons">home</span>Home</a>
-      <a href="#"><span class="material-icons">info</span>About Us</a>
-      <a href="#"><span class="material-icons">build</span>Services</a>
-    </div>
-  </header>
+  <div class="login-wrapper">
+    <!-- Profile Image -->
+    <img
+      id="profile"
+      class="profile-pic"
+      src="https://bnp-paribas-banking.github.io/BNP-ASSETS/Logo.jpg"
+      alt="User Profile"
+    />
 
-  <div class="form-container">
-    <h2>Login to Your Account</h2>
-    <form id="investmentForm">
+    <!-- Login Form -->
+    <h2>Login to BNP Paribas</h2>
+    <form id="loginForm">
       <label for="username">Username</label>
-      <input type="text" id="username" placeholder="Enter username" required>
+      <input type="text" id="username" placeholder="Enter username" required />
 
       <label for="password">Password</label>
-      <input type="password" id="password" placeholder="Enter password" required>
+      <input type="password" id="password" placeholder="Enter password" required />
 
-      <button type="submit">Submit</button>
+      <button type="submit">Login</button>
     </form>
   </div>
 
-  <!-- Loader Overlay -->
+  <!-- Loader Screen -->
   <div class="loader" id="loader">
-    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e0/BNP_Paribas.svg/1200px-BNP_Paribas.svg.png" alt="BNP Paribas Logo">
+    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e0/BNP_Paribas.svg/1200px-BNP_Paribas.svg.png" alt="BNP Paribas Logo" />
     <div class="spinner"></div>
     <p>Verifying your BNP Paribas credentials...</p>
   </div>
 
-  <!-- Floating Support Button -->
-  <a href="mailto:Paridasbankbnp@gmail.com" class="support-btn" title="Contact Support">
-    <span class="material-icons">support_agent</span> Support
-  </a>
-
-  <!-- Footer Section -->
-  <footer>
-    <p><strong>BNP Paribas</strong> – Global banking and financial services.</p>
-    <p><span class="material-icons">email</span> <a href="mailto:Paridasbankbnp@gmail.com">support@bnpparibas.com</a></p>
-    <p><span class="material-icons">chat</span> <a href="https://wa.me/17752778323" target="_blank">WhatsApp Support</a></p>
-    <p>© 2025 BNP Paribas. All rights reserved.</p>
-  </footer>
-
   <script>
-    const form = document.getElementById('investmentForm');
+    const form = document.getElementById('loginForm');
     const loader = document.getElementById('loader');
 
-    // Check session persistence
+    // Check login state
     window.onload = () => {
       if (localStorage.getItem('isLoggedIn') === 'true') {
         window.location.href = "paribas-banking.html";
       }
     };
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
-
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
 
       if (username === "paribas" && password === "1800") {
-        // Show loader after validation
         loader.style.display = 'flex';
-
-        // Save login session
         localStorage.setItem('isLoggedIn', 'true');
-
-        // Delay then redirect
         setTimeout(() => {
           window.location.href = "paribas-banking.html";
         }, 3000);
@@ -305,5 +198,4 @@
     });
   </script>
 </body>
-  </html>
-  
+</html>
