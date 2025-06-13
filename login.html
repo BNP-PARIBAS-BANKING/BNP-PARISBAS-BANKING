@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>account Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.3/dist/umd/supabase.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  min-height: 100vh;
+  background: #f9f9f9;
+  margin: 0;
+}
+    body {
+  font-family: 'Inter', sans-serif; /* or 'Poppins' */
+  background-color: #f4f6f8;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+h1, h2, h3, h4 {
+  font-weight: 600;
+}
+    #loginForm, #dashboard {
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    h2 { color: #00945e; }
+    .badge {
+      padding: 5px 10px;
+      border-radius: 5px;
+      background-color: gray;
+      color: white;
+    }
+    .badge.active { background-color: #00945e; }
+    .badge.pending { background-color: orange; }
+    .badge.block { background-color: red; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+    }
+    input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      margin-bottom: 15px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #00945e;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #logoutBtn {
+      float: right;
+      background: crimson;
+    }
+  </style>
+  <style>
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background: #f4f7fb;
+  color: #222;
+}
+
+
+.container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+
+/* 1. Global sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2. Responsive container */
+.container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 3. Media Queries (already partially present, just improve) */
+@media screen and (max-width: 768px) {
+  .dashboard-container {
+    padding: 16px;
+    margin: 20px 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .dashboard-container {
+    width: 95%;
+    padding: 16px;
+  }
+
+  .bottom-nav {
+    flex-direction: row;
+    height: auto;
+  }
+
+  .nav-item .material-icons {
+    font-size: 20px;
+  }
+}
+.dashboard-container {
+  max-width: 450px;
+  margin: 20px auto;
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+  overflow-x: auto ;
+}
+
+/* Make layout responsive on all screen sizes */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #f4f7fb;
+  color: #222;
+}
+
+.dashboard-container {
+  max-width: 100%;
+  width: 95%;
+  margin: 10px auto;
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.header h4 {
+  margin: 0;
+  color: #0070ba;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+#logoutBtn {
+  background-color: #e60023;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.balance-section {
+  background: linear-gradient(to right, #0070ba, #00a8e8);
+  color: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#balance {
+  font-size: 28px;
+  font-weight: bold;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+/* Transaction history table styles */
+.transaction-title {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #0070ba;
+  font-weight: 600;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 700px;
+}
+
+thead {
+  background: #f0f3f7;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+th, td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  white-space: nowrap;
+}
+
+/* Responsive fixes for small screens */
+@media (max-width: 768px) {
+  .dashboard-container {
+    width: 98%;
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .header h4 {
+    font-size: 16px;
+  }
+
+  #logoutBtn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .balance-section {
+    padding: 16px;
+  }
+
+  #balance {
+    font-size: 24px;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  .transaction-title {
+    font-size: 15px;
+  }
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h4 {
+  margin: 0;
+  color: #0070ba;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+#logoutBtn {
+  background-color: #e60023;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.balance-section {
+  background: linear-gradient(to right, #0070ba, #00a8e8);
+  color: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.balance-section p {
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+#balance {
+  font-size: 32px;
+  font-weight: bold;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: white;
+  background: #888;
+}
+
+.badge.active {
+  background: #2ecc71;
+}
+.badge.pending {
+  background: #f1c40f;
+}
+.badge.block {
+  background: #e74c3c;
+}
+
+.transaction-title {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #0070ba;
+  font-weight: 600;
+}
+.transaction-history {
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.transaction-history th,
+.transaction-history td {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 15px;
+  min-width: 100px;
+  white-space: nowrap;
+}
+
+.transaction-history th:nth-child(4),
+.transaction-history td:nth-child(4) {
+  min-width: 200px; /* for long descriptions */
+}
+@media screen and (max-width: 768px) {
+  .dashboard-container {
+    padding: 20px;
+  }
+
+  .transaction-history {
+    display: block;
+    overflow-x: auto;
+  }
+}
+.table-container {
+  overflow-x: auto;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead {
+  background: #f0f3f7;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+th, td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  
+  	.dashboard-container {
+  max-width: 800px; /* increase from 400px or whatever it was */
+  width: 90%;
+  margin: 40px auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+}
+ 
+  #balance {
+    font-size: 28px;
+  }
+
+  .header h4 {
+    font-size: 16px;
+  }
+
+  #logoutBtn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  display: flex;
+  background: #fff;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+  border-top: 1px solid #eee;
+}
+
+.nav-item {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 12px;
+  color: #444;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  color: #0070ba;
+}
+
+.nav-item .material-icons {
+  font-size: 24px;
+  margin-bottom: 2px;
+}
+</style>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+<div id="loginForm">
+  <h4>welcome To BNP PARIBAS BANK </h4>
+  <h2>Login To Your Account</h2>
+  <input type="email" id="email" placeholder="Email" required />
+  <input type="password" id="password" placeholder="Password" required />
+  <button onclick="login()">Login</button>
+</div>
+
+<div id="dashboard" style="display:none;">
+  <div class="dashboard-container">
+    <div class="header">
+      <h4>Your account</h4>
+      <button id="logoutBtn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="balance-section">
+      <p><strong>Balance:</strong> $<span id="balance">0.00</span></p>
+      <p><strong>Status:</strong> <span class="badge" id="statusBadge">-</span></p>
+      <p><strong>Last Updated:</strong> <span id="timestamp">-</span></p>
+    </div>
+
+    <h2 class="transaction-title">Transaction History</h2>
+    <button onclick="downloadStatement()" style="margin-bottom: 15px; background: #0070ba; border-radius: 8px;">Download Statement (PDF)</button>
+    <div class="table-container">
+      <table>
+        
+        <thead>  
+  <tr>
+    <th>Time</th>
+    <th>Type</th>
+    <th>Amount</th>
+    <th>Description</th>
+    <th>Sender Name</th>
+    <th>Bank Name</th>
+    <th>Sender Account #</th>
+    <th>Txn Type</th>
+    <th>SWIFT Code</th>
+    <th>Txn Ref</th>
+  </tr>  
+</thead>
+       
+        <tbody id="transactionTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="bottom-nav">
+  <a href="create_account.html" class="nav-item" aria-label="Checking Accounts">
+    <span class="material-icons">account_balance</span>
+    <span>Savings Account</span>
+  </a>
+  <a href="create_account.html" class="nav-item" aria-label="Mortgages & Loans">
+    <span class="material-icons">home</span>
+    <span>Loans Account</span>
+  </a>
+  <a href="create_account.html" class="nav-item" aria-label="Insurance">
+    <span class="material-icons">verified_user</span>
+    <span>Investment Account</span>
+  </a>
+  <a href="create_account.html" class="nav-item" aria-label="Ventures & Retirement">
+    <span class="material-icons">trending_up</span>
+    <span>Current Account</span>
+  </a>
+</nav>
+</div>
+
+<script>
+  const supabaseClient = supabase.createClient(
+    'https://mslojedoggqjhejwploj.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zbG9qZWRvZ2dxamhlandwbG9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2MDA1MjIsImV4cCI6MjA2NTE3NjUyMn0.DTXwc0MXVQsQA77v3f2oPv6D19pP96j8ZBHGWFr_6_0'
+  );
+
+  let userId = null;
+
+  async function login() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    const { data, error } = await supabaseClient
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .eq('password', password)  // ⚠️ You can replace with hashed check later
+      .single();
+
+    if (error || !data) {
+      alert("Invalid email or password.");
+      return;
+    }
+
+    userId = data.id;
+    localStorage.setItem("custom_user_id", userId);
+    showDashboard();
+  }
+
+  async function showDashboard() {
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+
+    loadAccountInfo();
+    loadTransactions();
+
+    setInterval(() => {
+      loadAccountInfo();
+      loadTransactions();
+    }, 3000);
+  }
+
+  async function logout() {
+    localStorage.removeItem("custom_user_id");
+    location.reload();
+  }
+
+  async function loadAccountInfo() {
+    const { data, error } = await supabaseClient
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (data) {
+      document.getElementById("balance").textContent = (data.balance || 0).toFixed(2);
+      const badge = document.getElementById("statusBadge");
+      badge.textContent = data.status;
+      badge.className = `badge ${data.status}`;
+      document.getElementById("timestamp").textContent = new Date(data.updated_at || data.created_at).toLocaleString();
+    }
+  }
+
+  async function loadTransactions() {
+    const { data, error } = await supabaseClient
+      .from('transactions')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    const tbody = document.getElementById("transactionTableBody");
+    tbody.innerHTML = '';
+
+    if (!data || data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4">No transactions found.</td></tr>`;
+      return;
+    }
+data.forEach(tx => {
+      const row = document.createElement('tr');
+      
+      row.innerHTML = `
+  <td>${new Date(tx.created_at).toLocaleString()}</td>
+  <td>${tx.type}</td>
+  <td>$${parseFloat(tx.amount).toFixed(2)}</td>
+  <td>${tx.description || '-'}</td>
+  <td>${tx.sender_name || '-'}</td>
+  <td>${tx.bank_name || '-'}</td>
+  <td>${tx.sender_account_number || '-'}</td>
+  <td>${tx.transaction_type || '-'}</td>
+  <td>${tx.swift_code || '-'}</td>
+  <td>${tx.transaction_ref || '-'}</td>
+`;
+  
+      tbody.appendChild(row);
+    });
+  } ki
+    
+  
+  
+</script>
+<script>
+	
+  async function downloadStatement() {
+    const accountData = await supabaseClient
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    const transactionsData = await supabaseClient
+      .from('transactions')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    let y = 10;
+
+    // Header
+    doc.setFontSize(16);
+    doc.text("Statement of Account", 10, y);
+    y += 10;
+
+    doc.setFontSize(12);
+    doc.text(`Name: ${accountData.data?.name || 'N/A'}`, 10, y); y += 7;
+    doc.text(`Email: ${accountData.data?.email || 'N/A'}`, 10, y); y += 7;
+    doc.text(`Balance: $${(accountData.data?.balance || 0).toFixed(2)}`, 10, y); y += 7;
+    doc.text(`Status: ${accountData.data?.status || 'N/A'}`, 10, y); y += 15;
+
+    doc.setFontSize(14);
+    doc.text("Transactions:", 10, y);
+    y += 10;
+
+    if (!transactionsData.data || transactionsData.data.length === 0) {
+      doc.setFontSize(12);
+      doc.text("No transactions found.", 10, y);
+    } else {
+      doc.setFontSize(10);
+
+      transactionsData.data.forEach(tx => {
+        if (y > 260) {
+          doc.addPage();
+          y = 10;
+        }
+
+        const dateStr = new Date(tx.created_at).toLocaleString();
+        const amountStr = `$${parseFloat(tx.amount).toFixed(2)}`;
+
+        // First row
+        doc.text(`Date: ${dateStr}`, 10, y);
+        doc.text(`Type: ${tx.type || '-'}`, 80, y);
+        doc.text(`Amount: ${amountStr}`, 140, y);
+        y += 6;
+
+        // Description (wrapped)
+        const descText = doc.splitTextToSize(`Desc: ${tx.description || '-'}`, 180);
+        doc.text(descText, 10, y);
+        y += descText.length * 5;
+
+        // Sender name & Bankp
+        doc.text(`Sender: ${tx.sender_name || '-'}`, 10, y);
+        doc.text(`Bank: ${tx.bank_name || '-'}`, 80, y);
+        y += 6;
+
+        // Account & Transaction Type
+        doc.text(`Acct #: ${tx.sender_account_number || '-'}`, 10, y);
+        doc.text(`Txn Type: ${tx.transaction_type || '-'}`, 80, y);
+        y += 6;
+
+        // SWIFT & Ref
+        doc.text(`SWIFT: ${tx.swift_code || '-'}`, 10, y);
+        doc.text(`Txn Ref: ${tx.transaction_ref || '-'}`, 80, y);
+        y += 10; // space before next transaction
+      });
+    }
+
+    doc.save("statement_of_account.pdf");
+  }
+ fetchUsers();  // Call the function once DOM is ready
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</body>
+</html>
