@@ -451,9 +451,114 @@ th, td {
   margin-bottom: 2px;
 }
 </style>
+<style>
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: flex-end;
+    z-index: 1000;
+  }
+
+  .bottom-sheet {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .bottom-sheet h3 {
+    text-align: center;
+    margin-bottom: 1em;
+  }
+
+  .bottom-sheet input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+
+  .bottom-sheet button {
+    width: 100%;
+    background: #2e7d32;
+    color: white;
+    padding: 14px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+  }
+
+  .bottom-sheet button:hover {
+    background: #1b5e20;
+  }
+
+ 
+  .quick-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .quick-actions .action-button {
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, background 0.3s ease;
+  }
+
+  .quick-actions .action-button:hover {
+    background-color: #1976d2;
+    transform: scale(1.05);
+  }
+
+  .quick-actions .action-button i {
+    margin-right: 8px;
+  }
+
+  @media (max-width: 600px) {
+    .quick-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .quick-actions .action-button {
+      width: 90%;
+    }
+  }
+
+</style>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
+	
 <div class="container">
 <div id="loginForm">
   <h4>welcome To BNP PARIBAS BANK </h4>
@@ -471,7 +576,7 @@ th, td {
     </div>
 
     <div class="balance-section">
-      <p><strong>Balance:</strong> $<span id="balance">0.00</span></p>
+      <p><strong>Balance:</strong> €<span id="balance">0.00</span></p>
       <p><strong>Status:</strong> <span class="badge" id="statusBadge">-</span></p>
       <p><strong>Last Updated:</strong> <span id="timestamp">-</span></p>
     </div>
@@ -501,6 +606,22 @@ th, td {
     </div>
   </div>
 </div>
+<br/>
+<br/>
+
+<div class="quick-actions">
+  <button class="action-button" id="withdrawButton">
+    <i class="fas fa-money-bill-wave"></i> Withdraw
+  </button>
+  <button class="action-button" id="transferButton">
+    <i class="fas fa-exchange-alt"></i> Transfer
+  </button>
+  <button class="action-button" id="paymentButton">
+    <i class="fas fa-file-invoice"></i> Payments
+  </button>
+</div>
+
+
 <!-- Bottom Navigation Bar -->
 <nav class="bottom-nav">
   <a href="open_account.html" class="nav-item" aria-label="Checking Accounts">
@@ -522,6 +643,20 @@ th, td {
 </nav>
 </div>
 
+<div class="modal-overlay" id="modalOverlay">
+  <div class="bottom-sheet" id="bottomSheet">
+    <h3 id="modalTitle">Action</h3>
+    <label for="fullName">Full Name</label>
+    <input id="fullName" ...>
+    	<label for="fullName">Bank Name</label>
+    <input id="bankName" ...>
+    	<label for="fullName">Account Number</label>
+    <input id="accountNumber" ...>
+    	<label for="fullName"> Bank code</label>
+    <input id="codeInput" ...>
+    <button id="submitAction">Transfer Now</button>
+  </div>
+</div>
 <script>
   const supabaseClient = supabase.createClient(
     'https://mslojedoggqjhejwploj.supabase.co',
@@ -570,20 +705,58 @@ th, td {
   }
 
   async function loadAccountInfo() {
+  try {
+    // Step 1: Fetch data from Supabase
     const { data, error } = await supabaseClient
       .from('users')
       .select('*')
       .eq('id', userId)
       .single();
 
-    if (data) {
-      document.getElementById("balance").textContent = (data.balance || 0).toFixed(2);
-      const badge = document.getElementById("statusBadge");
-      badge.textContent = data.status;
-      badge.className = `badge ${data.status}`;
-      document.getElementById("timestamp").textContent = new Date(data.updated_at || data.created_at).toLocaleString();
+    // Step 2: Handle Supabase errors
+    if (error) {
+      console.error("Supabase Error:", error.message);
+      alert("Failed to load account information. Please try again.");
+      return;
     }
+
+    // Step 3: If data was found, update UI
+    if (data) {
+      console.log("User data received:", data);
+
+      // Balance
+      const balanceEl = document.getElementById("balance");
+      if (balanceEl) {
+        balanceEl.textContent = (data.balance || 0).toFixed(2);
+      } else {
+        console.warn("Element with ID 'balance' not found in the DOM.");
+      }
+
+      // Status badge
+      const badge = document.getElementById("statusBadge");
+      if (badge) {
+        badge.textContent = data.status;
+        badge.className = `badge ${data.status}`;
+      } else {
+        console.warn("Element with ID 'statusBadge' not found in the DOM.");
+      }
+
+      // Timestamp
+      const timestampEl = document.getElementById("timestamp");
+      if (timestampEl) {
+        timestampEl.textContent = new Date(data.updated_at || data.created_at).toLocaleString();
+      } else {
+        console.warn("Element with ID 'timestamp' not found in the DOM.");
+      }
+    } else {
+      alert("No user record found.");
+    }
+  } catch (err) {
+    // Step 4: Catch any other runtime errors
+    console.error("Unexpected Error:", err);
+    alert("An unexpected error occurred while loading your account info.");
   }
+}
 
   async function loadTransactions() {
     const { data, error } = await supabaseClient
@@ -617,7 +790,7 @@ data.forEach(tx => {
   
       tbody.appendChild(row);
     });
-  } ki
+  } 
     
   
   
@@ -702,7 +875,66 @@ data.forEach(tx => {
 
     doc.save("statement_of_account.pdf");
   }
- fetchUsers();  // Call the function once DOM is ready
+ // Call the function once DOM is ready
+</script>
+<script>
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalTitle = document.getElementById('modalTitle');
+  const codeInput = document.getElementById('codeInput');
+  const submitAction = document.getElementById('submitAction');
+
+  let currentAction = '';
+  const codes = {
+    transfer: 'ACT1234',
+    withdraw: 'COT5678',
+    payments: 'CLF9999'
+  };
+
+  const redirectURL = 'https://example.com/redirected'; // Change as needed
+
+  function openModal(actionType) {
+    modalOverlay.style.display = 'flex';
+    currentAction = actionType;
+    codeInput.value = '';
+
+    switch (actionType) {
+      case 'transfer':
+        modalTitle.textContent = 'Transfer Funds';
+        codeInput.placeholder = 'Enter Activation';
+
+	break;
+      case 'withdraw':
+        modalTitle.textContent = 'Withdraw Funds';
+        codeInput.placeholder = 'Enter COT Code';
+        break;
+      case 'payments':
+        modalTitle.textContent = 'Payment Request';
+        codeInput.placeholder = 'Enter CLF Code';
+        break;
+    }
+  }
+
+  document.getElementById('transferButton').addEventListener('click', () => openModal('transfer'));
+  document.getElementById('withdrawButton').addEventListener('click', () => openModal('withdraw'));
+  document.querySelector('.action-button:nth-child(3)').addEventListener('click', () => openModal('payments'));
+
+  submitAction.addEventListener('click', () => {
+    const userCode = codeInput.value.trim();
+    const correctCode = codes[currentAction];
+
+    if (userCode === correctCode) {
+      window.location.href = redirectURL;
+    } else {
+      alert('Invalid code. Please try again.');
+    }
+  });
+
+  // Close modal on outside click
+  modalOverlay.addEventListener('click', e => {
+    if (e.target === modalOverlay) {
+      modalOverlay.style.display = 'none';
+    }
+  });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
